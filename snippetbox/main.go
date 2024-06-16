@@ -10,6 +10,8 @@ import (
 // Define a home handler
 // Writes byte slice containing "Hello from Snippetbox" as the response body
 func home(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Server", "Go")
+
 	w.Write([]byte("Hello from Snippetbox"))
 }
 
@@ -21,8 +23,7 @@ func snippetView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	msg := fmt.Sprintf("Display a specific snippet with ID %d...", id)
-	w.Write([]byte(msg))
+	fmt.Fprintf(w, "Display a specific snippet with ID %d...", id)
 }
 
 func snippetCreate(w http.ResponseWriter, _ *http.Request) {
@@ -30,6 +31,11 @@ func snippetCreate(w http.ResponseWriter, _ *http.Request) {
 }
 
 func snippetCreatePost(w http.ResponseWriter, _ *http.Request) {
+	// Can only be called once per request
+	// Once written, it cannot be modified
+	// Must be before writing the response
+	w.WriteHeader(http.StatusCreated)
+
 	w.Write([]byte("Save a new snippet..."))
 }
 
