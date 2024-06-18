@@ -1,11 +1,16 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 )
 
 func main() {
+	// Commnad-line flag name=addr, default value=:4000 and help message
+	addr := flag.String("addr", ":4000", "HTTP network address")
+	flag.Parse()
+
 	// Initialize new new servemux
 	// Register the home function as the handler for the "/" URL pattern
 	mux := http.NewServeMux()
@@ -22,11 +27,12 @@ func main() {
 	mux.HandleFunc("POST /snippet/create", snippetCreatePost)
 
 	// Print a log message to say the server is starting
-	log.Print("Starting server on :4000")
+	log.Printf("Starting server on %s", *addr)
 
 	// Start a new web server with two parameters:
 	// 1. The TCP network address to listen to
 	// 2. The servemux to use
-	err := http.ListenAndServe(":4000", mux)
+	// Pass the deferenced addr pointer
+	err := http.ListenAndServe(*addr, mux)
 	log.Fatal(err)
 }
