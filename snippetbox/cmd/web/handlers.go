@@ -10,7 +10,8 @@ import (
 
 // Define a home handler
 // Writes byte slice containing "Hello from Snippetbox" as the response body
-func home(w http.ResponseWriter, r *http.Request) {
+// Change the signature of home controller so it is defined as a method against *application
+func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Server", "Go")
 
 	files := []string{
@@ -22,6 +23,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	ts, err := template.ParseFiles(files...)
 	if err != nil {
 		log.Print(err.Error())
+		app.logger.Error(err.Error(), "method", r.Method, "uri", r.URL.RequestURI())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -30,12 +32,12 @@ func home(w http.ResponseWriter, r *http.Request) {
 	// Last parameter is data to pass to the template
 	err = ts.ExecuteTemplate(w, "base", nil)
 	if err != nil {
-		log.Print(err.Error())
+		app.logger.Error(err.Error(), "method", r.Method, "uri", r.URL.RequestURI())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 }
 
-func snippetView(w http.ResponseWriter, r *http.Request) {
+func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 
 	if err != nil || id < 1 {
@@ -46,11 +48,11 @@ func snippetView(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Display a specific snippet with ID %d...", id)
 }
 
-func snippetCreate(w http.ResponseWriter, _ *http.Request) {
+func (app *application) snippetCreate(w http.ResponseWriter, _ *http.Request) {
 	w.Write([]byte("Create a new snippet..."))
 }
 
-func snippetCreatePost(w http.ResponseWriter, _ *http.Request) {
+func (app *application) snippetCreatePost(w http.ResponseWriter, _ *http.Request) {
 	// Can only be called once per request
 	// Once written, it cannot be modified
 	// Must be before writing the response
