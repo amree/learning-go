@@ -1,4 +1,4 @@
-module github.com/amree/learning-go/snippetbox
+module github.com/amree/learning-go/lets-go
 
 go 1.22.3
 

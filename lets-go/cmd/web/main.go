@@ -9,7 +9,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"github.com/amree/learning-go/snippetbox/internal/models"
+	"github.com/amree/learning-go/lets-go/internal/models"
 )
 
 type application struct {
@@ -18,7 +18,7 @@ type application struct {
 }
 
 func main() {
-	// Commnad-line flag name=addr, default value=:4000 and help message
+	// Command-line flag name=addr, default value=:4000 and help message
 	addr := flag.String("addr", ":4000", "HTTP network address")
 	dsn := flag.String("dsn", "web:pass@/snippetbox?parseTime=true", "MySQL data source name")
 	flag.Parse()
