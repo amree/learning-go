@@ -48,11 +48,16 @@ func (app *application) snippetCreate(w http.ResponseWriter, _ *http.Request) {
 	w.Write([]byte("Create a new snippet..."))
 }
 
-func (app *application) snippetCreatePost(w http.ResponseWriter, _ *http.Request) {
-	// Can only be called once per request
-	// Once written, it cannot be modified
-	// Must be before writing the response
-	w.WriteHeader(http.StatusCreated)
+func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request) {
+	title := "0 snail"
+	content := "0 snail\nClimb Mount Fuji,\nBut slowly, slowly!\n\n- Kobayashi Issa"
+	expires := 7
 
-	w.Write([]byte("Save a new snippet..."))
+	id, err := app.snippets.Insert(title, content, expires)
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/snippet/view/%d", id), http.StatusSeeOther)
 }
