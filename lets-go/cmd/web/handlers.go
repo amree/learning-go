@@ -13,8 +13,6 @@ import (
 // Writes byte slice containing "Hello from Snippetbox" as the response body
 // Change the signature of home controller so it is defined as a method against *application
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Server", "Go")
-
 	snippets, err := app.snippets.Latest()
 	if err != nil {
 		app.serverError(w, r, err)
