@@ -48,8 +48,10 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, http.StatusOK, "view.tmpl", data)
 }
 
-func (app *application) snippetCreate(w http.ResponseWriter, _ *http.Request) {
-	w.Write([]byte("Create a new snippet..."))
+func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+
+	app.render(w, r, http.StatusOK, "create.tmpl", data)
 }
 
 func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request) {
