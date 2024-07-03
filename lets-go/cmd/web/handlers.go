@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
+	"unicode/utf8"
 
 	"github.com/amree/learning-go/lets-go/internal/models"
 )
@@ -66,6 +68,27 @@ func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request
 	expires, err := strconv.Atoi(r.PostForm.Get("expires"))
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	fieldErrors := make(map[string]string)
+
+	if strings.TrimSpace(title) == "" {
+		fieldErrors["title"] = "Title cannot be blank"
+	} else if utf8.RuneCountInString(title) > 100 {
+		fieldErrors["title"] = "Title cannot be longer than 100 characters"
+	}
+
+	if strings.TrimSpace(content) == "" {
+		fieldErrors["content"] = "Content cannot be blank"
+	}
+
+	if expires != 1 && expires != 7 && expires != 365 {
+		fieldErrors["expires"] = "Expiry must be 1, 7 or 365 days"
+	}
+
+	if len(fieldErrors) > 0 {
+		fmt.Fprintf(w, "%v", fieldErrors)
 		return
 	}
 
