@@ -62,14 +62,16 @@ func main() {
 		sessionManager: sessionManager,
 	}
 
-	// Print a log message to say the server is starting
-	logger.Info("starting server", slog.Any("addr", *addr))
+	srv := &http.Server{
+		Addr:     *addr,
+		Handler:  app.routes(),
+		ErrorLog: slog.NewLogLogger(logger.Handler(), slog.LevelError),
+	}
 
-	// Start a new web server with two parameters:
-	// 1. The TCP network address to listen to
-	// 2. The servemux to use
-	// Pass the deferenced addr pointer
-	err = http.ListenAndServe(*addr, app.routes())
+	// Print a log message to say the server is starting
+	logger.Info("starting server", "addr", srv.Addr)
+
+	err = srv.ListenAndServe()
 
 	logger.Error(err.Error())
 	os.Exit(1)
