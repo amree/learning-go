@@ -26,7 +26,6 @@ func extractCSRFToken(t *testing.T, body string) string {
 	if len(matches) < 2 {
 		t.Fatal("no CSRF token found in body")
 	}
-
 	return html.EscapeString(string(matches[1]))
 }
 
