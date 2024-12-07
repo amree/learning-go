@@ -1,0 +1,46 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+# Set the main entry point to your API
+cmd = "go build -o ./tmp/main ./cmd/api"
+# Binary file output
+bin = "tmp/main"
+# Watch all relevant directories
+include_dir = [
+    "cmd",
+    "internal",
+    "migrations"
+]
+# Watch for Go files
+include_ext = ["go"]
+# Exclude temporary and binary directories
+exclude_dir = [
+    "tmp",
+    "bin",
+    "remote",
+    "cmd/api/tmp",
+    "cmd/tmp"
+]
+# Optional: include specific files if needed
+include_file = []
+# Exclude temporary files
+exclude_file = ["build-errors.log"]
+# Set rebuild delay
+delay = 1000 # ms
+# Stop on build errors
+stop_on_error = true
+send_interrupt = false
+kill_delay = 500 # ms
+
+[log]
+time = true
+
+[color]
+main = "magenta"
+watcher = "cyan"
+build = "yellow"
+runner = "green"
+
+[misc]
+clean_on_exit = true
